@@ -2,6 +2,9 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 
+TOTAL_NUMBER_OF_CONTAINERS = 50
+INITIAL_NUMBER_OF_CONTAINERS = 10
+
 class FooEnv(gym.Env):
   metadata = {'render.modes': ['human']}
 
