@@ -14,15 +14,14 @@ CURRENT_NUMBER_OF_CONTAINERS_LABEL = "Current number of containers"
 class FooEnv(gym.Env):
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, total_containers, num_containers, avg_mem_utilization):
+  def __init__(self):
     self.action_space = spaces.Discrete(2) #There are two actions: upscale and downscale
     self.observation_space = spaces.Tuple((
       spaces.Discrete(TOTAL_NUMBER_OF_CONTAINERS), #total number of containers
-      spaces.Discrete(50), #number of containers being used
-      spaces.Box(np.array([0]), np.array([100]),dtype=np.float16))) #average memory utilization 
-    self.num_containers = num_containers
+      spaces.Discrete(INITIAL_NUMBER_OF_CONTAINERS), #number of containers being used
+      spaces.Box(low = -1, high = 1,shape=(3,2),dtype=np.int8))) #The range of actions possible (-1 for downscale and +1 for upscale)
     self.total_containers = TOTAL_NUMBER_OF_CONTAINERS
-    self.avg_mem_utilization = avg_mem_utilization
+    self.avg_mem_utilization = 20.0
     
   def step(self, action):
     # Execute one time step within the environment
@@ -30,13 +29,18 @@ class FooEnv(gym.Env):
 
         self.current_step += 1
 
-        if self.current_step > TOTAL_NUMBER_OF_CONTAINERS:
-            self.current_step = 0
+        #if self.current_step > TOTAL_NUMBER_OF_CONTAINERS:
+         #   self.current_step = 0
 
         delay_modifier = (self.current_step / MAX_STEPS)
 
+        # Creating the DataFrame 
+        df = pd.DataFrame([[0, 0, 3, 0, 1, 0], [0, -3, 3, 3, -1, 0], [0, 0, 0, +3, -1, -1]],
+        index=['S1', 'S2', 'S3'],
+        columns=['S1d', 'S1u', 'S2d', 'S2u', 'S3d', 'S3u'])
+
         reward = 3 * delay_modifier
-        done = self.avg_mem_utilization >= 0.70
+        done = self.avg_mem_utilization >= 70.0
 
         obs = self._next_observation()
 
@@ -60,7 +64,6 @@ class FooEnv(gym.Env):
       self.total_containers,
     ]], axis=0)
     return obs
-
 
   def _take_action(self, action):
     if action < 1: #upscaling action
