@@ -1,6 +1,8 @@
-class PolicyDoesNotExistException(Exception)
+class PolicyDoesNotExistException(Exception):
     pass
-class InsufficentPolicyParameter(Exception):
+
+class InsufficientPolicyParameters(Exception):
     pass
+
 class FunctionNotImplemented(Exception):
     pass

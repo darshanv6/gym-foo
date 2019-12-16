@@ -7,14 +7,15 @@ from rl_exceptions import FunctionNotImplemented
 logging.basicConfig()
 logger = logging.getLogger()
 
-logger.SetLevel(logging.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 class ExperienceReplayMemory:
     """BAse class for all the extended versions for the 
     ExperienceReplayMemory Class Implementation
     """
     pass
-class SequentailDequeMemory(ExperienceReplayMemory):
+
+class SequentialDequeMemory(ExperienceReplayMemory):
     """Extension of ExperienceReplayMemory class with
     deque based sequential memory
     """
@@ -33,9 +34,3 @@ class SequentailDequeMemory(ExperienceReplayMemory):
 
     if __name__ == "__main__":
         raise FunctionNotImplemented("this class needs to be imported and instantiated from a reinforcement learning agent class and doesnot contain any invokable code in  the main function ")
-
-
-
-
-
-
