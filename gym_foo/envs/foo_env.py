@@ -14,7 +14,7 @@ CURRENT_NUMBER_OF_CONTAINERS_LABEL = "Current number of containers"
 class FooEnv(gym.Env):
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, total_containers, num_containers, avg_mem_utilization):
+  def __init__(self):
     self.action_space = spaces.Discrete(2) #There are two actions: upscale and downscale
     self.observation_space = spaces.Tuple((
       spaces.Discrete(TOTAL_NUMBER_OF_CONTAINERS), #total number of containers
