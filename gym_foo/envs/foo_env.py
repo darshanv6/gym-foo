@@ -22,25 +22,99 @@ class FooEnv(gym.Env):
       spaces.Box(low = -1, high = 1,shape=(3,2),dtype=np.int8))) #The range of actions possible (-1 for downscale and +1 for upscale)
     self.total_containers = TOTAL_NUMBER_OF_CONTAINERS
     self.avg_mem_utilization = 20.0
+    self.next_state = None
+    self.current_state = None
+    self.current_action = None
     
   def step(self, action):
     # Execute one time step within the environment
-        self._take_action(action)
-
         self.current_step += 1
 
         #if self.current_step > TOTAL_NUMBER_OF_CONTAINERS:
-         #   self.current_step = 0
+        #self.current_step = 0
 
         delay_modifier = (self.current_step / MAX_STEPS)
 
-        # Creating the DataFrame 
-        df = pd.DataFrame([[0, 0, 3, 0, 1, 0], [0, -3, 3, 3, -1, 0], [0, 0, 0, +3, -1, -1]],
-        index=['S1', 'S2', 'S3'],
-        columns=['S1d', 'S1u', 'S2d', 'S2u', 'S3d', 'S3u'])
+        #Creating the DataFrame 
+        #self.df = pd.DataFrame([[0, 0, 3, 0, 1, 0], [0, -3, 3, 3, -1, 0], [0, 0, 0, +3, -1, -1]],
+        #index=['S1', 'S2', 'S3'],
+        #columns=['S1d', 'S1u', 'S2d', 'S2u', 'S3d', 'S3u'])
 
-        reward = 3 * delay_modifier
-        done = self.avg_mem_utilization >= 70.0
+        if self.avg_mem_utilization < 30.0:
+          self.next_state = 'S1'
+        elif self.avg_mem_utilization >= 30.0 and self.avg_mem_utilization < 70.0:
+          self.next_state = 'S2'
+        elif self.avg_mem_utilization >= 70.0:
+          self.next_state = 'S3'
+
+        if self.next_state == 'S1':
+         if self.current_state == 'S1':
+            if self.current_action == 1:
+              reward = 0
+            elif self.current_action == -1:
+              reward = 0
+        
+        if self.next_state == 'S1':
+         if self.current_state == 'S2':
+            if self.current_action == 1:
+              reward = 0
+            elif self.current_action == -1:
+              reward = 3
+
+        if self.next_state == 'S1':
+         if self.current_state == 'S3':
+            if self.current_action == 1:
+              reward = 0
+            elif self.current_action == -1:
+              reward = 1
+
+        if self.next_state == 'S2':
+         if self.current_state == 'S1':
+            if self.current_action == 1:
+              reward = -3
+            elif self.current_action == -1:
+              reward = 0
+
+        if self.next_state == 'S2':
+         if self.current_state == 'S2':
+            if self.current_action == 1:
+              reward = 3
+            elif self.current_action == -1:
+              reward = 3
+
+        if self.next_state == 'S2':
+         if self.current_state == 'S3':
+            if self.current_action == 1:
+              reward = 0
+            elif self.current_action == -1:
+              reward = -1
+
+        if self.next_state == 'S3':
+         if self.current_state == 'S1':
+            if self.current_action == 1:
+              reward = 0
+            elif self.current_action == -1:
+              reward = 0
+
+        if self.next_state == 'S3':
+         if self.current_state == 'S2':
+            if self.current_action == 1:
+              reward = 3
+            elif self.current_action == -1:
+              reward = 0
+
+        if self.next_state == 'S3':
+         if self.current_state == 'S3':
+            if self.current_action == 1:
+              reward = -1
+            elif self.current_action == -1:
+              reward = -1
+
+        reward = reward * delay_modifier
+
+        self._take_action(action)
+
+        done = self.current_step >= 40
 
         obs = self._next_observation()
 
@@ -54,22 +128,26 @@ class FooEnv(gym.Env):
 
   def _next_observation(self):
     frame = np.array([
-          random.randint(0,TOTAL_NUMBER_OF_CONTAINERS),
-          random.randint(0,TOTAL_NUMBER_OF_CONTAINERS),
+          self.num_containers,
+          self.total_containers,
+          self.current_state,
+          self.next_state,
+          self.current_action
         ])
 
     # Append additional data and scale each value to between 0-1
-    obs = np.append(frame, [[
-      self.num_containers,
-      self.total_containers,
-    ]], axis=0)
+    obs = np.append(frame, axis=0)
     return obs
 
   def _take_action(self, action):
     if action < 1: #upscaling action
-      self.num_containers+=1;
-    elif action < 2:
-      self.num_containers-=1;
+      self.num_containers+=1
+      self.next_state = self.current_state
+      self.current_action = 1
+    elif action < 2: #downscaling action
+      self.num_containers-=1
+      self.next_state = self.current_state
+      self.current_action = -1
   
   def render(self, mode='human', close=False):
     # Render the environment to the screen
