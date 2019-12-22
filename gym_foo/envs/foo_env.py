@@ -16,15 +16,27 @@ class FooEnv(gym.Env):
 
   def __init__(self):
     self.action_space = spaces.Discrete(2) #There are two actions: upscale and downscale
-    self.observation_space = spaces.Tuple((
-      spaces.Box(low = 0, high = TOTAL_NUMBER_OF_CONTAINERS, shape=(1,TOTAL_NUMBER_OF_CONTAINERS), dtype = np.int8), #total number of containers
-      spaces.Box(low = 0, high = INITIAL_NUMBER_OF_CONTAINERS, shape=(1,INITIAL_NUMBER_OF_CONTAINERS), dtype = np.int8), #number of containers being used
-      spaces.Box(low = -1, high = 1,shape=(3,2),dtype=np.int8))) #The range of actions possible (-1 for downscale and +1 for upscale)
+    # print(self.action_space)
     self.total_containers = TOTAL_NUMBER_OF_CONTAINERS
-    self.avg_mem_utilization = 20.0
-    self.next_state = None
-    self.current_state = None
-    self.current_action = None
+    self.num_containers = INITIAL_NUMBER_OF_CONTAINERS
+    self.avg_mem_utilization = 50.0
+    self.next_state = 2
+    self.current_state = 2
+    self.current_action = 0
+
+    high = np.array([
+          self.num_containers,
+          self.total_containers,
+          self.current_state,
+          self.next_state,
+          self.current_action])
+
+    self.observation_space = spaces.Box(-high, high, dtype=np.int8)
+    # self.observation_space = spaces.Tuple((
+    #   spaces.Box(low = 0, high = TOTAL_NUMBER_OF_CONTAINERS, shape=(1,TOTAL_NUMBER_OF_CONTAINERS), dtype = np.int8), #total number of containers
+    #   spaces.Box(low = 0, high = INITIAL_NUMBER_OF_CONTAINERS, shape=(1,INITIAL_NUMBER_OF_CONTAINERS), dtype = np.int8), #number of containers being used
+    #   spaces.Box(low = -1, high = 1,shape=(5,),dtype=np.int8))) #The range of actions possible (-1 for downscale and +1 for upscale)
+    
     
   def step(self, action):
     # Execute one time step within the environment
@@ -40,77 +52,77 @@ class FooEnv(gym.Env):
         #index=['S1', 'S2', 'S3'],
         #columns=['S1d', 'S1u', 'S2d', 'S2u', 'S3d', 'S3u'])
 
-        x = 100
+        x = 0
 
         if self.avg_mem_utilization < 30.0:
-          self.next_state = 'S1'
+          self.next_state = 1 #S1
         elif self.avg_mem_utilization >= 30.0 and self.avg_mem_utilization < 70.0:
-          self.next_state = 'S2'
+          self.next_state = 2 #'S2'
         elif self.avg_mem_utilization >= 70.0:
-          self.next_state = 'S3'
+          self.next_state = 3 #'S3'
 
 
-        if self.next_state == 'S1':
-         if self.current_state == 'S1':
-            if self.current_action == 1: # 1 means upscaling
+        if self.next_state == 1:
+         if self.current_state == 1:
+            if self.current_action == 0: # 0 means upscaling
               x = 0
-            elif self.current_action == -1: # -1 means downscaling
+            elif self.current_action == 1: # 1 means downscaling
               x = 0
         
-        if self.next_state == 'S1':
-         if self.current_state == 'S2':
-            if self.current_action == 1:
+        if self.next_state == 1:
+         if self.current_state == 2:
+            if self.current_action == 0:
               x = 0
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 3
 
-        if self.next_state == 'S1':
-         if self.current_state == 'S3':
-            if self.current_action == 1:
+        if self.next_state == 1:
+         if self.current_state == 3:
+            if self.current_action == 0:
               x = 0
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 1
 
-        if self.next_state == 'S2':
-         if self.current_state == 'S1':
-            if self.current_action == 1:
+        if self.next_state == 2:
+         if self.current_state == 1:
+            if self.current_action == 0:
               x = -3
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 0
 
-        if self.next_state == 'S2':
-         if self.current_state == 'S2':
-            if self.current_action == 1:
+        if self.next_state == 2:
+         if self.current_state == 2:
+            if self.current_action == 0:
               x = 3
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 3
 
-        if self.next_state == 'S2':
-         if self.current_state == 'S3':
-            if self.current_action == 1:
+        if self.next_state == 2:
+         if self.current_state == 3:
+            if self.current_action == 0:
               x = 0
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = -1
 
-        if self.next_state == 'S3':
-         if self.current_state == 'S1':
-            if self.current_action == 1:
+        if self.next_state == 3:
+         if self.current_state == 1:
+            if self.current_action == 0:
               x = 0
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 0
 
-        if self.next_state == 'S3':
-         if self.current_state == 'S2':
-            if self.current_action == 1:
+        if self.next_state == 3:
+         if self.current_state == 2:
+            if self.current_action == 0:
               x = 3
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = 0
 
-        if self.next_state == 'S3':
-         if self.current_state == 'S3':
-            if self.current_action == 1:
+        if self.next_state == 3:
+         if self.current_state == 3:
+            if self.current_action == 0:
               x = -1
-            elif self.current_action == -1:
+            elif self.current_action == 1:
               x = -1
 
         reward = x * delay_modifier
@@ -144,14 +156,14 @@ class FooEnv(gym.Env):
     return frame
 
   def _take_action(self, action):
-    if action < 1: #upscaling action
+    if action == 0: #upscaling action
       self.num_containers+=1
       self.next_state = self.current_state
-      self.current_action = 1
-    elif action < 2: #downscaling action
+      self.current_action = 0
+    elif action == 1: #downscaling action
       self.num_containers-=1
       self.next_state = self.current_state
-      self.current_action = -1
+      self.current_action = 1
   
   def render(self, mode='human', close=False):
     # Render the environment to the screen
