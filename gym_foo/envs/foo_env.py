@@ -6,7 +6,7 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 
 TOTAL_NUMBER_OF_CONTAINERS = 10
-INITIAL_NUMBER_OF_CONTAINERS = 10
+INITIAL_NUMBER_OF_CONTAINERS = 5
 MAX_STEPS = 100
 TOTAL_NUMBER_OF_CONTAINERS_LABEL = "Total number of containers"
 CURRENT_NUMBER_OF_CONTAINERS_LABEL = "Current number of containers"
@@ -23,6 +23,7 @@ class FooEnv(gym.Env):
     self.next_state = random.randint(1,3)
     self.current_state = random.randint(1,3)
     self.current_action = 0
+    self.min_no_containers = 2
 
     high = np.array([
           self.num_containers,
@@ -180,12 +181,17 @@ class FooEnv(gym.Env):
 
   def _take_action(self, action):
     if action == 0: #upscaling action
-      self.num_containers+=1
-      self.next_state = self.current_state
+      if self.num_containers == self.total_containers:
+        return
+      self.num_containers += 1
+      # self.next_state = self.current_state
       self.current_action = 0
-    elif action == 1: #downscaling action
-      self.num_containers-=1
-      self.next_state = self.current_state
+    elif action == 1:
+      if self.num_containers == self.min_no_containers:
+        return
+         #downscaling action
+      self.num_containers -= 1
+      # self.next_state = self.current_state
       self.current_action = 1
   
   def render(self, mode='human', close=False):
@@ -197,5 +203,4 @@ class FooEnv(gym.Env):
     print(f'Current state: {self.current_state}')
     print(f'Next state: {self.next_state}')
     print(f'Current action: {self.current_action}')
-
 
