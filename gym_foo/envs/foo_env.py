@@ -5,9 +5,9 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-TOTAL_NUMBER_OF_CONTAINERS = 50
+TOTAL_NUMBER_OF_CONTAINERS = 10
 INITIAL_NUMBER_OF_CONTAINERS = 10
-MAX_STEPS = TOTAL_NUMBER_OF_CONTAINERS
+MAX_STEPS = 100
 TOTAL_NUMBER_OF_CONTAINERS_LABEL = "Total number of containers"
 CURRENT_NUMBER_OF_CONTAINERS_LABEL = "Current number of containers"
 
@@ -55,11 +55,20 @@ class FooEnv(gym.Env):
         x = 0
 
         if self.avg_mem_utilization < 30.0:
+          self.current_state = self.next_state
           self.next_state = 1 #S1
+#          print('-----------------------------------------------------------------------------:j ')
+
         elif self.avg_mem_utilization >= 30.0 and self.avg_mem_utilization < 70.0:
+          self.current_state = self.next_state
           self.next_state = 2 #'S2'
+#          print('-----------------------------------------------------------------------------: k')
         elif self.avg_mem_utilization >= 70.0:
+          self.current_state = self.next_state
           self.next_state = 3 #'S3'
+#          print('-----------------------------------------------------------------------------: p')
+
+          self.current_action = action
 
 
         if self.next_state == 1:
@@ -127,11 +136,23 @@ class FooEnv(gym.Env):
 
         reward = x * delay_modifier
 
+        print(f'Reward: {reward}')
+        print(f'x: {x}')
+        print(f'delay_modifier: {delay_modifier}')
+        print(f'action: {action}')
+        print(f'Current state: {self.current_state}')
+        print(f'Next state: {self.next_state}')
+        print(f'-----------------------------------------------------------------------------: {action}')
+        print(f'-----------------------------------------------------------------------------: {self.current_state}')
+
+
         self._take_action(action)
 
         done = self.current_step >= MAX_STEPS
+        self.avg_mem_utilization = random.randint(0,100)
 
         obs = self._next_observation()
+        print("kkkkkkkkkkkkkkk",obs)
 
         return obs, reward, done, {}
   
