@@ -19,9 +19,9 @@ class FooEnv(gym.Env):
     # print(self.action_space)
     self.total_containers = TOTAL_NUMBER_OF_CONTAINERS
     self.num_containers = INITIAL_NUMBER_OF_CONTAINERS
-    self.avg_mem_utilization = 50.0
-    self.next_state = 2
-    self.current_state = 2
+    self.avg_mem_utilization = random.randint(0,100)
+    self.next_state = random.randint(1,3)
+    self.current_state = random.randint(1,3)
     self.current_action = 0
 
     high = np.array([
@@ -139,6 +139,8 @@ class FooEnv(gym.Env):
     self.num_containers = INITIAL_NUMBER_OF_CONTAINERS
     # Set the current step to a random point within the range
     self.current_step = random.randint(0, TOTAL_NUMBER_OF_CONTAINERS)
+    self.avg_mem_utilization = random.randint(0,100)
+
     return self._next_observation()
 
   def _next_observation(self):
