@@ -7,9 +7,7 @@ from gym.utils import seeding
 
 TOTAL_NUMBER_OF_CONTAINERS = 10
 INITIAL_NUMBER_OF_CONTAINERS = 5
-MAX_STEPS = 100
-TOTAL_NUMBER_OF_CONTAINERS_LABEL = "Total number of containers"
-CURRENT_NUMBER_OF_CONTAINERS_LABEL = "Current number of containers"
+MAX_STEPS = 1000
 
 class FooEnv(gym.Env):
   metadata = {'render.modes': ['human']}
@@ -58,16 +56,16 @@ class FooEnv(gym.Env):
         if self.avg_mem_utilization < 30.0:
           self.current_state = self.next_state
           self.next_state = 1 #S1
-#          print('-----------------------------------------------------------------------------:j ')
+#          print('----------------------------------------------------------------------------- ')
 
         elif self.avg_mem_utilization >= 30.0 and self.avg_mem_utilization < 70.0:
           self.current_state = self.next_state
           self.next_state = 2 #'S2'
-#          print('-----------------------------------------------------------------------------: k')
+#          print('-----------------------------------------------------------------------------')
         elif self.avg_mem_utilization >= 70.0:
           self.current_state = self.next_state
           self.next_state = 3 #'S3'
-#          print('-----------------------------------------------------------------------------: p')
+#          print('-----------------------------------------------------------------------------')
 
           self.current_action = action
 
@@ -137,14 +135,14 @@ class FooEnv(gym.Env):
 
         reward = x * delay_modifier
 
-        print(f'Reward: {reward}')
-        print(f'x: {x}')
-        print(f'delay_modifier: {delay_modifier}')
-        print(f'action: {action}')
-        print(f'Current state: {self.current_state}')
-        print(f'Next state: {self.next_state}')
-        print(f'-----------------------------------------------------------------------------: {action}')
-        print(f'-----------------------------------------------------------------------------: {self.current_state}')
+        # print(f'Reward: {reward}')
+        # print(f'x: {x}')
+        # print(f'delay_modifier: {delay_modifier}')
+        # print(f'action: {action}')
+        # print(f'Current state: {self.current_state}')
+        # print(f'Next state: {self.next_state}')
+        # print(f'-----------------------------------------------------------------------------')
+        # print(f'-----------------------------------------------------------------------------s')
 
 
         self._take_action(action)
@@ -153,14 +151,13 @@ class FooEnv(gym.Env):
         self.avg_mem_utilization = random.randint(0,100)
 
         obs = self._next_observation()
-        print("kkkkkkkkkkkkkkk",obs)
 
         return obs, reward, done, {}
   
   def reset(self):
     self.num_containers = INITIAL_NUMBER_OF_CONTAINERS
     # Set the current step to a random point within the range
-    self.current_step = random.randint(0, TOTAL_NUMBER_OF_CONTAINERS)
+    self.current_step = 1
     self.avg_mem_utilization = random.randint(0,100)
 
     return self._next_observation()
@@ -196,11 +193,12 @@ class FooEnv(gym.Env):
   
   def render(self, mode='human', close=False):
     # Render the environment to the screen
-    print(f'Step: {self.current_step}')
-    print(f'Average memory utilization: {self.avg_mem_utilization}')
-    print(f'Total number of containers: {self.total_containers}')
-    print(f'Number of containers in use: {self.num_containers}')
-    print(f'Current state: {self.current_state}')
-    print(f'Next state: {self.next_state}')
-    print(f'Current action: {self.current_action}')
+    # print(f'Step: {self.current_step}')
+    # print(f'Average memory utilization: {self.avg_mem_utilization}')
+    # print(f'Total number of containers: {self.total_containers}')
+    # print(f'Number of containers in use: {self.num_containers}')
+    # print(f'Current state: {self.current_state}')
+    # print(f'Next state: {self.next_state}')
+    # print(f'Current action: {self.current_action}')
+    return
 
