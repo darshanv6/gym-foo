@@ -147,7 +147,7 @@ class FooEnv(gym.Env):
 
         self._take_action(action)
 
-        done = reward >= 8
+        done = self.current_step >= MAX_STEPS
         self.avg_mem_utilization = random.randint(0,100)
 
         obs = self._next_observation()
