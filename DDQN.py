@@ -30,7 +30,7 @@ logger.setLevel(logging.DEBUG)
 
 
 class DoubleDQN:
-    def __init__(self,agent_name=None,env=gym.make('MountainCar-v0'),number_episodes = 500,discounting_factor = 0.9,learning_rate=0.001,behaviour_policy = "epsilon_decay",policy_parameters={"epsilon":1.0,"min_epsilon":0.01,"epsilon_decay_rate":0.99}, deep_learning_model_hidden_layer_configuration = [32,16,8]):
+    def __init__(self,agent_name=None,env=gym.make('foo-v0'),number_episodes = 500,discounting_factor = 0.9,learning_rate=0.001,behaviour_policy = "epsilon_decay",policy_parameters={"epsilon":1.0,"min_epsilon":0.01,"epsilon_decay_rate":0.99}, deep_learning_model_hidden_layer_configuration = [32,16,8]):
         self.agent_name="ddqa_"+str(time.strftime("%Y%m%d-%H%M%S")) if agent_name is None else agent_name
         self.model_weights_dir = "model_weights"
         self.env = env
