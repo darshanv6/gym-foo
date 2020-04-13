@@ -18,9 +18,6 @@ from keras.optimizers import Adam
 from keras.utils.vis_utils import plot_model
 from keras.losses import mean_squared_error
 
-import gym
-
-
 from experience_replay import SequentialDequeMemory
 from behaviour_policy import BehaviourPolicy
 

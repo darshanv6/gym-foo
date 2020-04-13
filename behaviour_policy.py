@@ -34,7 +34,7 @@ class BehaviourPolicy:
             self.epsilon_decay_rate = self.policy_parameters["epsilon_decay_rate"]
             return self.return_epsilon_greedy_policy()
         else:
-            raise PolicyDoesNotExistException("the selected policy does not exists! the implemented policies are epsilon-greedy and epsilon-decay")
+            raise PolicyDoesNotExistException("The selected policy does not exist! The implemented policies are epsilon-greedy and epsilon-decay. ")
 
     def return_epsilon_decay_policy(self):
 
@@ -66,8 +66,4 @@ class BehaviourPolicy:
 	    return choose_action_by_epsilon_greedy
 
 if __name__ == "__main__":
-    raise FunctionNotImplemented("this class needs to be imported and instaniated from  a reinforcement learning agent class and does not contain any invokable code in the main function")
-
-
-        
-
+    raise FunctionNotImplemented("This class needs to be imported and instaniated from  a reinforcement learning agent class and does not contain any invokable code in the main function")
